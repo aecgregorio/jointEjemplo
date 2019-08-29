@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ejemplo jointjs</title>
+	<link rel="stylesheet" type="text/css" href="joint.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<style type="text/css">
+		#paper{
+			background-color: #F0E68C;
+		}
+		/* Show it is fixed to the top */
+		body {
+			min-height: 75rem;
+			padding-top: 4.5rem;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		<h1 class="navbar-brand" >Crear diagrama con un archivo JSON</h1>
+	</nav>
+	<main role="main" class="container">
+		<div class="row">
+			<div class="col-md-3">
+				<form id="jsonForm" class="was-validated">
+					<fieldset>
+						<legend>Seleccione su archivo json</legend>
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="jsonArchivo" required>
+							<label class="custom-file-label" for="jsonArchivo">Elija archivo...</label>
+							<div class="invalid-feedback">Elija un archivo json válido</div>
+						</div>
+						<hr>
+						<button type="submit" class="btn btn-primary">Aceptar</button>
+					</fieldset>
+				</form>
+			</div>
+			<div class="col-md-9">
+				<div id="paper"></div>
+			</div>
+		</div>
+	</main>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="bootstrap.js"></script>
+	<script type="text/javascript" src="lodash.js"></script>
+	<script type="text/javascript" src="backbone.js"></script>
+	<script type="text/javascript" src="joint.js"></script>
+
+	<script type="text/javascript">
+		(function($) {
+			$(function(){
+				var graph = new joint.dia.Graph();
+
+				new joint.dia.Paper({
+				    el: document.getElementById('paper'),
+				    width: "900",
+				    height: 600,
+				    gridSize: 1,
+				    model: graph
+				});
+
+				$('#jsonForm').submit(function(e){
+					e.preventDefault();
+					var file = document.getElementById('jsonArchivo').files[0];
+					if(file){
+					    var reader = new FileReader();
+					    reader.readAsText(file);
+					    reader.onload = function(e){
+					        console.log(e.target.result);
+					        var g = JSON.parse(e.target.result);
+					        graph.fromJSON(g);
+					    };
+					}
+				});
+			});
+		})(jQuery);
+	</script>
+</body>
+</html>
